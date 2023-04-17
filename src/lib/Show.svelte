@@ -9,29 +9,52 @@
 	export let id = '';
 	export let shown = false;
 	export let steps: Array<Step>;
-	export let currentStep = 0;
+	export let currentStepCounter = 0;
+	$: currentStep = handleStep(steps[currentStepCounter]);
+	let callbackTimeout: number | undefined = undefined;
 
 	function handleClose() {
 		shown = false;
 	}
 
 	function handleBack() {
-		if (currentStep == 0) return;
-		currentStep--;
+		if (currentStepCounter == 0) return;
+		currentStepCounter--;
 	}
 
 	function handleNext() {
-		currentStep++;
+		currentStepCounter++;
+	}
 
+	function handleStep(step: Step | undefined) {
+		// Return a step is the step is undefined for some reason
+		if (!step) return {} as Step;
 		// Finish if the last step has finished
-		if (currentStep >= steps.length) finish();
+		if (currentStepCounter >= steps.length) finish();
+
+		// If there is a position callback it needs to be called before anything else
+		if (step.positionCallback) {
+			step.positionCallback.apply(null, step.positionCallbackArguments || []);
+		}
 
 		// Update button text for the last step is the user has inputted none
-		if (currentStep == steps.length - 1) {
-			if (!steps[currentStep].nextButtonText) {
-				steps[currentStep].nextButtonText = 'Finish';
+		if (currentStepCounter == steps.length - 1) {
+			if (!step.nextButtonText) {
+				step.nextButtonText = 'Finish';
 			}
 		}
+		
+		// Clear the previous callback timeout if it has not fired yet
+		clearTimeout(callbackTimeout);
+
+		// If there is a callback for this step call it a slight delay to give the dom time to update
+		if (step.callback) {
+			callbackTimeout = setTimeout(() => {
+				step.callback.apply(null, step.callbackArguments || []);
+			}, 200);
+		}
+
+		return step;
 	}
 
 	function finish() {
@@ -42,15 +65,15 @@
 {#if steps.length > 0 && shown}
 	<Modal
 		{id}
-		target={steps[currentStep]['target']}
-		title={steps[currentStep]['title']}
-		body={steps[currentStep]['body']}
-		nextButtonText={steps[currentStep]['nextButtonText']}
-		backButtonText={steps[currentStep]['backButtonText']}
-		disableBackButton={currentStep == 0}
+		target={currentStep['target']}
+		title={currentStep['title']}
+		body={currentStep['body']}
+		nextButtonText={currentStep['nextButtonText']}
+		backButtonText={currentStep['backButtonText']}
+		disableBackButton={currentStepCounter <= 0}
 		on:close={handleClose}
 		on:back={handleBack}
 		on:next={handleNext}
 	/>
-	<HighlightContainer {id} target={steps[currentStep]['target']} />
+	<HighlightContainer {id} target={currentStep['target']} />
 {/if}

@@ -25,13 +25,12 @@ export function calculatePosition(
 		const { id, placement } = options;
 		return calculateModalPosition(id, target, placement);
 	} else {
-		let { top, left, width, height } = target.getBoundingClientRect();
-		const { oversizeX, oversizeY, scrollX, scrollY } = options;
+		let { top, left } = target.getBoundingClientRect();
+		const { width, height } = target.getBoundingClientRect();
+		const { scrollX, scrollY } = options;
 
 		top = top + (scrollY || 0);
 		left = left + (scrollX || 0);
-		width = width + (oversizeX || 0);
-		height = height + (oversizeY || 0);
 
 		scrollingToTarget = scrollToTarget(target);
 

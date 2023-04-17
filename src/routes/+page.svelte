@@ -6,17 +6,27 @@
 	let steps: Array<Step> = [];
 	let shown = false;
 
+	function message(message: string) {
+		console.log(message);
+	}
+
 	onMount(() => {
 		steps = [
 			{
 				title: 'Here you define a title for the modal',
 				body: 'Here you define a body for the modal',
-				target: document.getElementById('title')
+				target: document.getElementById('title'),
+				positionCallback: message,
+				positionCallbackArguments: ["Position title"],
+				callback: message,
+				callbackArguments: ["Callback title"]
 			},
 			{
 				title: 'First paragraph',
 				body: 'Here you define a body for the modal',
-				target: document.getElementById('first')
+				target: document.getElementById('first'),
+				backButtonText: "Back to title",
+				nextButtonText: "Next to second p element"
 			},
 			{
 				title: 'Second paragraph',
