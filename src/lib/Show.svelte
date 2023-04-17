@@ -10,6 +10,7 @@
 	export let shown = false;
 	export let steps: Array<Step>;
 	export let currentStepCounter = 0;
+	export let useLocalStorage = true;
 	$: currentStep = handleStep(steps[currentStepCounter]);
 	let callbackTimeout: number | undefined = undefined;
 
@@ -30,7 +31,7 @@
 		// Return a step is the step is undefined for some reason
 		if (!step) return {} as Step;
 		// Finish if the last step has finished
-		if (currentStepCounter >= steps.length) finish();
+		if (currentStepCounter >= steps.length || localStorage.getItem(id) !== undefined) finish();
 
 		// If there is a position callback it needs to be called before anything else
 		if (step.positionCallback) {
@@ -43,7 +44,7 @@
 				step.nextButtonText = 'Finish';
 			}
 		}
-		
+
 		// Clear the previous callback timeout if it has not fired yet
 		clearTimeout(callbackTimeout);
 
@@ -58,6 +59,9 @@
 	}
 
 	function finish() {
+		if (useLocalStorage) {
+			localStorage.setItem(id, "true");
+		}
 		shown = false;
 	}
 </script>
@@ -67,13 +71,18 @@
 		{id}
 		target={currentStep['target']}
 		title={currentStep['title']}
-		body={currentStep['body']}
 		nextButtonText={currentStep['nextButtonText']}
 		backButtonText={currentStep['backButtonText']}
 		disableBackButton={currentStepCounter <= 0}
 		on:close={handleClose}
 		on:back={handleBack}
 		on:next={handleNext}
-	/>
+	>
+		{#if currentStep['body']}
+			{@html currentStep['body']}
+		{:else}
+			<slot />
+		{/if}
+	</Modal>
 	<HighlightContainer {id} target={currentStep['target']} />
 {/if}

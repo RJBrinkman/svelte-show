@@ -1,3 +1,9 @@
+# <div style="text-align: center;">Svelte Show</div>
+Svelte Show is a library aimed to help you setup an easy show-case of any project you have created. It allows for programatically creating a showcase of your project by defining steps over which the Show element iterates. These steps have quite some options with a lot more ideas on the way.
+
+## Usage
+
+
 # create-svelte
 
 Everything you need to build a Svelte library, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte).

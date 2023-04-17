@@ -10,7 +10,6 @@
 	export let id: string;
 	export let target: Element | string | null = null;
 	export let title = '';
-	export let body: HTMLElement | null | string = '';
 	export let backButtonText: string | undefined = 'Back';
 	export let nextButtonText: string | undefined = 'Next';
 	export let placement: Placement = 'bottom';
@@ -19,10 +18,10 @@
 
 	// The position and center should be updated anytime the target, id or placement are changed
 	$: positionVariables = calculatePosition(target, {
-				id,
-				type: 'Modal',
-				placement
-			});
+		id,
+		type: 'Modal',
+		placement
+	});
 	$: center = !target;
 
 	// Dispatcher for close, back and next events
@@ -31,14 +30,14 @@
 	// Once everything has mounted the target is re-assigned to trigger the recalculation of the position variables
 	onMount(() => {
 		target = target;
-	})
+	});
 </script>
 
-<div {id} class="show-modal" class:show class:center style={positionVariables}>
+<div {id} class="modal" class:show class:center style={positionVariables}>
 	<button class="close-btn" on:click={() => dispatcher('close')}>&times;</button>
 	<header class="title">{title}</header>
 	<div class="body">
-		{@html body}
+		<slot />
 	</div>
 	<div class="controls">
 		<button disabled={disableBackButton} on:click={() => dispatcher('back')}>
@@ -51,7 +50,7 @@
 </div>
 
 <style lang="scss">
-	.show-modal {
+	.modal {
 		top: calc(var(--y, 50%) + var(--yOffset, 0));
 		left: calc(var(--x, 50%) + var(--xOffset, 0));
 		background-color: white;

@@ -1,6 +1,6 @@
 export interface Step {
 	title: string;
-	body: HTMLElement | null | string;
+	body?: HTMLElement | string;
 	target: HTMLElement | null | string;
 	/* Custom text for back and next button */
 	backButtonText?: string;
@@ -22,5 +22,3 @@ export interface CalculatePositionOptions {
 }
 
 export type Placement = 'top' | 'left' | 'bottom' | 'right';
-
-

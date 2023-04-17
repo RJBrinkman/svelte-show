@@ -5,6 +5,7 @@
 
 	let steps: Array<Step> = [];
 	let shown = false;
+	let currentStep: number;
 
 	function message(message: string) {
 		console.log(message);
@@ -17,20 +18,19 @@
 				body: 'Here you define a body for the modal',
 				target: document.getElementById('title'),
 				positionCallback: message,
-				positionCallbackArguments: ["Position title"],
+				positionCallbackArguments: ['Position title'],
 				callback: message,
-				callbackArguments: ["Callback title"]
+				callbackArguments: ['Callback title']
 			},
 			{
 				title: 'First paragraph',
 				body: 'Here you define a body for the modal',
 				target: document.getElementById('first'),
-				backButtonText: "Back to title",
-				nextButtonText: "Next to second p element"
+				backButtonText: 'Back to title',
+				nextButtonText: 'Next to second p element'
 			},
 			{
 				title: 'Second paragraph',
-				body: 'Here you define a body for the modal',
 				target: '#second'
 			},
 			{
@@ -52,12 +52,18 @@
 	Visit <a class="link" href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation
 </p>
 <div class="bottom">
-<p id="third">
-Lorem ipsum, dolor sit amet consectetur adipisicing elit. Corporis tempore provident fugit quis adipisci facere expedita vel iste, quo beatae repellat soluta asperiores sit accusantium aspernatur eligendi maiores consequuntur. Voluptatibus.
-</p>
+	<p id="third">
+		Lorem ipsum, dolor sit amet consectetur adipisicing elit. Corporis tempore provident fugit quis
+		adipisci facere expedita vel iste, quo beatae repellat soluta asperiores sit accusantium
+		aspernatur eligendi maiores consequuntur. Voluptatibus.
+	</p>
 </div>
 
-<Show id={'test-show'} {steps} {shown} />
+<Show id={'test-show'} {steps} {shown} bind:currentStepCounter={currentStep}>
+	{#if currentStep === 2}
+		<h1>This is the third step!</h1>
+	{/if}
+</Show>
 
 <style lang="scss">
 	#title {

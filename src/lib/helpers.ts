@@ -89,7 +89,7 @@ function calculateModalPosition(id: string, target: Element, placement?: Placeme
 
 /**
  * Sets a small timout before scrolling to a target to ensure all animations follow smoothly, clears previously set timeout
- * 
+ *
  * @param target Element to which we need to scroll
  * @returns the timeout before this element is scrolled towards
  */
@@ -101,6 +101,6 @@ function scrollToTarget(target: Element) {
 			behavior: 'smooth',
 			block: 'center',
 			inline: 'center'
-		})
+		});
 	}, 100);
 }
