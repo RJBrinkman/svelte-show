@@ -7,7 +7,7 @@
 	 * Props for modal
 	 */
 	export let id = '';
-	export let shown = false;
+	export let active = false;
 	export let steps: Array<Step>;
 	export let currentStepCounter = 0;
 	export let useLocalStorage = true;
@@ -15,7 +15,7 @@
 	let callbackTimeout: number | undefined = undefined;
 
 	function handleClose() {
-		shown = false;
+		active = false;
 	}
 
 	function handleBack() {
@@ -31,11 +31,12 @@
 		// Return a step is the step is undefined for some reason
 		if (!step) return {} as Step;
 		// Finish if the last step has finished
-		if (currentStepCounter >= steps.length || localStorage.getItem(id) !== undefined) finish();
+		console.log(localStorage.getItem(id));
+		if (currentStepCounter >= steps.length || localStorage.getItem(id) !== null) finish();
 
 		// If there is a position callback it needs to be called before anything else
-		if (step.positionCallback) {
-			step.positionCallback.apply(null, step.positionCallbackArguments || []);
+		if (step.beforeCallback) {
+			step.beforeCallback.apply(null, step.beforeCallbackArguments || []);
 		}
 
 		// Update button text for the last step is the user has inputted none
@@ -49,9 +50,9 @@
 		clearTimeout(callbackTimeout);
 
 		// If there is a callback for this step call it a slight delay to give the dom time to update
-		if (step.callback) {
+		if (step.afterCallback) {
 			callbackTimeout = setTimeout(() => {
-				step.callback.apply(null, step.callbackArguments || []);
+				step.afterCallback.apply(null, step.afterCallbackArguments || []);
 			}, 200);
 		}
 
@@ -62,11 +63,11 @@
 		if (useLocalStorage) {
 			localStorage.setItem(id, "true");
 		}
-		shown = false;
+		active = false;
 	}
 </script>
 
-{#if steps.length > 0 && shown}
+{#if steps.length > 0 && active}
 	<Modal
 		{id}
 		target={currentStep['target']}

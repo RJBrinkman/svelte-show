@@ -1,16 +1,17 @@
 export interface Step {
 	title: string;
+	/* If body is not present the slotted content will be used (which can be empty) */
 	body?: HTMLElement | string;
 	target: HTMLElement | null | string;
 	/* Custom text for back and next button */
 	backButtonText?: string;
 	nextButtonText?: string;
-	/* Setup a callback function which is called once everything has fully loaded  */
-	callback?: any;
-	callbackArguments?: Array<any>;
-	/* Setup a callback to reposition the page before setting this step if need be */
-	positionCallback?: any;
-	positionCallbackArguments?: Array<any>;
+	/* beforeCallback is called before anything, e.g. to reposition certain things */
+	beforeCallback?: any;
+	beforeCallbackArguments?: Array<any>;
+	/* afterCallback is called after everything has finished  */
+	afterCallback?: any;
+	afterCallbackArguments?: Array<any>;
 }
 
 export interface CalculatePositionOptions {

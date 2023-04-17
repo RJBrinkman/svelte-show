@@ -4,7 +4,7 @@
 	import { onMount } from 'svelte';
 
 	let steps: Array<Step> = [];
-	let shown = false;
+	let active = false;
 	let currentStep: number;
 
 	function message(message: string) {
@@ -17,14 +17,14 @@
 				title: 'Here you define a title for the modal',
 				body: 'Here you define a body for the modal',
 				target: document.getElementById('title'),
-				positionCallback: message,
-				positionCallbackArguments: ['Position title'],
-				callback: message,
-				callbackArguments: ['Callback title']
+				beforeCallback: message,
+				beforeCallbackArguments: ['Position title'],
+				afterCallback: message,
+				afterCallbackArguments: ['Callback title']
 			},
 			{
 				title: 'First paragraph',
-				body: 'Here you define a body for the modal',
+				body: '<p style="color: green;">Here you define a body for the modal</p>',
 				target: document.getElementById('first'),
 				backButtonText: 'Back to title',
 				nextButtonText: 'Next to second p element'
@@ -40,7 +40,7 @@
 			}
 		];
 
-		shown = true;
+		active = true;
 	});
 </script>
 
@@ -59,7 +59,7 @@
 	</p>
 </div>
 
-<Show id={'test-show'} {steps} {shown} bind:currentStepCounter={currentStep}>
+<Show id={'test-show'} {steps} {active} bind:currentStepCounter={currentStep}>
 	{#if currentStep === 2}
 		<h1>This is the third step!</h1>
 	{/if}
