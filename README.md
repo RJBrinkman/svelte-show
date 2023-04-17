@@ -4,6 +4,19 @@ Everything you need to build a Svelte library, powered by [`create-svelte`](http
 
 Read more about creating a library [in the docs](https://kit.svelte.dev/docs/packaging).
 
+# ROADMAP
+
+- Steps without a modal
+- Same modal, multiple modal targets
+- Modal in screen corner position
+- Highlights within highlights
+- Text being highligted if present
+- Or full highlight box
+- Slots for body content
+- Full svelte components as body content
+- Fully customizable styling
+-
+
 ## Creating a project
 
 If you're seeing this, you've probably already done this step. Congrats!

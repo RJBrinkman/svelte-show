@@ -4,6 +4,9 @@
 	import type { Placement } from './types';
 	import { onMount } from 'svelte';
 
+	/**
+	 * Props for the modal
+	 */
 	export let id: string;
 	export let target: Element | string | null = null;
 	export let title = '';
@@ -13,9 +16,14 @@
 	export let placement: Placement = 'bottom';
 	export let show = true;
 	export let disableBackButton = false;
+
 	let positionVariables = '';
 	let center = true;
 
+	// Dispatcher for close, back and next events
+	const dispatcher = createEventDispatcher();
+
+	// onMount update current position, and everytime either target, id or placement changes
 	$: {
 		onMount(() => {
 			positionVariables = calculatePosition(target, {
@@ -23,31 +31,29 @@
 				type: 'Modal',
 				placement
 			});
-			center = !target;
 		});
+		center = !target;
 	}
-
-	const dispatcher = createEventDispatcher();
 </script>
 
-<div {id} class="modal" class:show class:center style={positionVariables}>
+<div {id} class="show-modal" class:show class:center style={positionVariables}>
 	<button class="close-btn" on:click={() => dispatcher('close')}>&times;</button>
 	<header class="title">{title}</header>
 	<div class="body">
 		{@html body}
 	</div>
-	<div class="footer">
-		<button class="btn btn-back" disabled={disableBackButton} on:click={() => dispatcher('back')}>
+	<div class="controls">
+		<button disabled={disableBackButton} on:click={() => dispatcher('back')}>
 			{backButtonText !== undefined ? backButtonText : 'Back'}
 		</button>
-		<button class="btn btn-next" on:click={() => dispatcher('next')}>
+		<button on:click={() => dispatcher('next')}>
 			{nextButtonText !== undefined ? nextButtonText : 'Next'}
 		</button>
 	</div>
 </div>
 
 <style lang="scss">
-	.modal {
+	.show-modal {
 		--y: 50%;
 		--x: 50%;
 		--xOffset: 0;
@@ -89,7 +95,7 @@
 			max-width: calc(100% - 50px);
 		}
 
-		.footer {
+		.controls {
 			padding: 0.5rem;
 			display: flex;
 			justify-content: space-between;
@@ -100,10 +106,6 @@
 				&:disabled {
 					display: none;
 				}
-			}
-
-			button:disabled {
-				display: none;
 			}
 		}
 

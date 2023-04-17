@@ -1,28 +1,49 @@
 import type { CalculatePositionOptions, Placement } from './types';
 
+/**
+ * Returns a string with CSS variables that can be used in conjunction with CSS to set the correct position for a show modal or highlightcontainer
+ *
+ * @param target The element that is targetted by this highlightcontainer or modal
+ * @param options Parameters used for calculating the correct placement for either type
+ * @returns string with css parameters that can be set as style
+ */
 export function calculatePosition(
 	target: Element | string | null = null,
 	options: CalculatePositionOptions
-) {
+): string {
+	// If the target is a query string use it to select a target
 	if (typeof target === 'string') {
 		target = document.querySelector(target);
 	}
 
+	// If the target is null (e.g. it does not exist), no positioning is needed
 	if (!target) return '';
 
 	if (options['type'] === 'Modal') {
 		const { id, placement } = options;
 		return calculateModalPosition(id, target, placement);
 	} else {
-		const { top, left, width, height } = target.getBoundingClientRect();
+		let { top, left, width, height } = target.getBoundingClientRect();
 		const { oversizeX, oversizeY, scrollX, scrollY } = options;
-		return `--top: ${top + (scrollY || 0)}px; --left: ${left + (scrollX || 0)}px; --width: ${
-			width + (oversizeX || 0)
-		}px; --height: ${height + (oversizeY || 0)}px;`;
+
+		top = top + (scrollY || 0);
+		left = left + (scrollX || 0);
+		width = width + (oversizeX || 0);
+		height = height + (oversizeY || 0);
+
+		return `--top: ${top}px; --left: ${left}px; --width: ${width}px; --height: ${height}px;`;
 	}
 }
 
-function calculateModalPosition(id: string, target: Element, placement?: placement) {
+/**
+ * Determines the exact position fir a modal based on the placement and a target
+ *
+ * @param id ID of the modal of which the position is calculated
+ * @param target Element which points to the target that is currently being hightlighted
+ * @param placement Placement for the modal (top, left, bottom, right)
+ * @returns string with css variables based on which a precise position can be set
+ */
+function calculateModalPosition(id: string, target: Element, placement?: Placement) {
 	let xValue = '';
 	let yValue = '';
 	let xOffset = '';

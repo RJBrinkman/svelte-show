@@ -3,6 +3,9 @@
 	import HighlightContainer from './HighlightContainer.svelte';
 	import type { Step } from './types';
 
+	/**
+	 * Props for modal
+	 */
 	export let id = '';
 	export let shown = false;
 	export let steps: Array<Step>;
@@ -20,8 +23,10 @@
 	function handleNext() {
 		currentStep++;
 
+		// Finish if the last step has finished
 		if (currentStep >= steps.length) finish();
 
+		// Update button text for the last step is the user has inputted none
 		if (currentStep == steps.length - 1) {
 			if (!steps[currentStep].nextButtonText) {
 				steps[currentStep].nextButtonText = 'Finish';
@@ -31,8 +36,6 @@
 
 	function finish() {
 		shown = false;
-		localStorage.setItem('id', id);
-		return;
 	}
 </script>
 
