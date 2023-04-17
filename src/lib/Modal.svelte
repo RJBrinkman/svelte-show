@@ -17,23 +17,21 @@
 	export let show = true;
 	export let disableBackButton = false;
 
-	let positionVariables = '';
-	let center = true;
-
-	// Dispatcher for close, back and next events
-	const dispatcher = createEventDispatcher();
-
-	// onMount update current position, and everytime either target, id or placement changes
-	$: {
-		onMount(() => {
-			positionVariables = calculatePosition(target, {
+	// The position and center should be updated anytime the target, id or placement are changed
+	$: positionVariables = calculatePosition(target, {
 				id,
 				type: 'Modal',
 				placement
 			});
-		});
-		center = !target;
-	}
+	$: center = !target;
+
+	// Dispatcher for close, back and next events
+	const dispatcher = createEventDispatcher();
+
+	// Once everything has mounted the target is re-assigned to trigger the recalculation of the position variables
+	onMount(() => {
+		target = target;
+	})
 </script>
 
 <div {id} class="show-modal" class:show class:center style={positionVariables}>
@@ -54,13 +52,8 @@
 
 <style lang="scss">
 	.show-modal {
-		--y: 50%;
-		--x: 50%;
-		--xOffset: 0;
-		--yOffset: 0;
-
-		top: calc(var(--y) + var(--yOffset));
-		left: calc(var(--x) + var(--xOffset));
+		top: calc(var(--y, 50%) + var(--yOffset, 0));
+		left: calc(var(--x, 50%) + var(--xOffset, 0));
 		background-color: white;
 		position: absolute;
 		border-radius: 0.25em;
@@ -104,7 +97,7 @@
 				cursor: pointer;
 
 				&:disabled {
-					display: none;
+					opacity: 0;
 				}
 			}
 		}

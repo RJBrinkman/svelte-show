@@ -22,6 +22,11 @@
 				title: 'Second paragraph',
 				body: 'Here you define a body for the modal',
 				target: '#second'
+			},
+			{
+				title: 'Third paragraph',
+				body: 'Smooth scroll?',
+				target: '#third'
 			}
 		];
 
@@ -36,11 +41,21 @@
 <p id="second">
 	Visit <a class="link" href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation
 </p>
+<div class="bottom">
+<p id="third">
+Lorem ipsum, dolor sit amet consectetur adipisicing elit. Corporis tempore provident fugit quis adipisci facere expedita vel iste, quo beatae repellat soluta asperiores sit accusantium aspernatur eligendi maiores consequuntur. Voluptatibus.
+</p>
+</div>
 
 <Show id={'test-show'} {steps} {shown} />
 
 <style lang="scss">
 	#title {
 		color: red;
+	}
+
+	.bottom {
+		margin-top: 1500px;
+		margin-bottom: 500px;
 	}
 </style>

@@ -1,5 +1,7 @@
 import type { CalculatePositionOptions, Placement } from './types';
 
+let scrollingToTarget: number | undefined = undefined;
+
 /**
  * Returns a string with CSS variables that can be used in conjunction with CSS to set the correct position for a show modal or highlightcontainer
  *
@@ -30,6 +32,8 @@ export function calculatePosition(
 		left = left + (scrollX || 0);
 		width = width + (oversizeX || 0);
 		height = height + (oversizeY || 0);
+
+		scrollingToTarget = scrollToTarget(target);
 
 		return `--top: ${top}px; --left: ${left}px; --width: ${width}px; --height: ${height}px;`;
 	}
@@ -79,5 +83,25 @@ function calculateModalPosition(id: string, target: Element, placement?: Placeme
 		yOffset = '-0.25em';
 	}
 
+	scrollingToTarget = scrollToTarget(target);
+
 	return `--x: ${xValue}; --y: ${yValue}; --xOffset: ${xOffset}; --yOffset: ${yOffset};`;
+}
+
+/**
+ * Sets a small timout before scrolling to a target to ensure all animations follow smoothly, clears previously set timeout
+ * 
+ * @param target Element to which we need to scroll
+ * @returns the timeout before this element is scrolled towards
+ */
+function scrollToTarget(target: Element) {
+	clearTimeout(scrollingToTarget);
+
+	return setTimeout(() => {
+		target.scrollIntoView({
+			behavior: 'smooth',
+			block: 'center',
+			inline: 'center'
+		})
+	}, 100);
 }
